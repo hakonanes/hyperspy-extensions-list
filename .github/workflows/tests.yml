@@ -125,7 +125,7 @@ jobs:
       - name: Run Kikuchipy Test Suite
         if: ${{ always() }}
         run: |
-          python -m pytest --pyargs kikuchipy
+          python -m pytest --pyargs kikuchipy -k "not test_plot_spherical"
 
 #      - name: Run LumiSpy Test Suite
 #        if: ${{ always() }}
