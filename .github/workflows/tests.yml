@@ -19,33 +19,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        HYPERSPY_VERSION: ['release', 'RnP', 'RnM']
-        EXTENSION_VERSION: ['release', 'dev']
+#        HYPERSPY_VERSION: ['release', 'RnP', 'RnM']
+        HYPERSPY_VERSION: ['release']
+#        EXTENSION_VERSION: ['release', 'dev']
+        EXTENSION_VERSION: ['release']
         DEPENDENCIES_DEV: [false]
         DEPENDENCIES_PRE_RELEASE: [false]
         USE_MAMBA: [true]
-        include:
-          # test against upstream dev
-          - DEPENDENCIES_DEV: true
-            LABEL: -dependencies_dev
-            HYPERSPY_VERSION: 'RnM'
-            EXTENSION_VERSION: 'dev'
-            # numba dev version is installed separately from numba/label/dev channel
-            # others are installed as wheels from
-            # https://pypi.anaconda.org/scipy-wheels-nightly/simple
-            # add numpy when it is working again (import error)
-            DEPENDENCIES: numba scipy scikit-image scikit-learn
-            USE_MAMBA: false
-          - DEPENDENCIES_PRE_RELEASE: true
-            LABEL: -dependencies_pre_release
-            HYPERSPY_VERSION: 'RnM'
-            EXTENSION_VERSION: 'dev'
-            DEPENDENCIES: matplotlib numba numpy scipy sympy h5py scikit-image scikit-learn
-            USE_MAMBA: false
+#        include:
+#          # test against upstream dev
+#          - DEPENDENCIES_DEV: true
+#            LABEL: -dependencies_dev
+#            HYPERSPY_VERSION: 'RnM'
+#            EXTENSION_VERSION: 'dev'
+#            # numba dev version is installed separately from numba/label/dev channel
+#            # others are installed as wheels from
+#            # https://pypi.anaconda.org/scipy-wheels-nightly/simple
+#            # add numpy when it is working again (import error)
+#            DEPENDENCIES: numba scipy scikit-image scikit-learn
+#            USE_MAMBA: false
+#          - DEPENDENCIES_PRE_RELEASE: true
+#            LABEL: -dependencies_pre_release
+#            HYPERSPY_VERSION: 'RnM'
+#            EXTENSION_VERSION: 'dev'
+#            DEPENDENCIES: matplotlib numba numpy scipy sympy h5py scikit-image scikit-learn
+#            USE_MAMBA: false
 
     env:
       MPLBACKEND: agg
-      EXTENSION: kikuchipy lumispy pyxem
+#      EXTENSION: kikuchipy lumispy pyxem
+      EXTENSION: kikuchipy
       TEST_DEPS: pytest pytest-xdist pytest-rerunfailures pytest-instafail
     defaults:
       run:
@@ -115,22 +118,22 @@ jobs:
           conda clean --all
           pip cache purge
 
-      - name: Run HyperSpy Test Suite
-        run: |
-          python -m pytest --pyargs hyperspy --reruns 3 -n 2 --instafail
+#      - name: Run HyperSpy Test Suite
+#        run: |
+#          python -m pytest --pyargs hyperspy --reruns 3 -n 2 --instafail
 
-#      - name: Run Kikuchipy Test Suite
+      - name: Run Kikuchipy Test Suite
+        if: ${{ always() }}
+        run: |
+          python -m pytest --pyargs kikuchipy
+
+#      - name: Run LumiSpy Test Suite
+#        if: ${{ always() }}
+#        #if: contains(matrix.EXTENSION_VERSION, 'dev') # Tests only against development version, if a fix is not released yet.
+#        run: |
+#          python -m pytest --pyargs lumispy
+#
+#      - name: Run Pyxem Test Suite
 #        if: ${{ always() }}
 #        run: |
-#          python -m pytest --pyargs kikuchipy
-
-      - name: Run LumiSpy Test Suite
-        if: ${{ always() }}
-        #if: contains(matrix.EXTENSION_VERSION, 'dev') # Tests only against development version, if a fix is not released yet.
-        run: |
-          python -m pytest --pyargs lumispy
-
-      - name: Run Pyxem Test Suite
-        if: ${{ always() }}
-        run: |
-          python -m pytest --pyargs pyxem
+#          python -m pytest --pyargs pyxem
