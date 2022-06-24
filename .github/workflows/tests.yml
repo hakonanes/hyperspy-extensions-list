@@ -125,7 +125,10 @@ jobs:
       - name: Run Kikuchipy Test Suite
         if: ${{ always() }}
         run: |
-          python -m pytest --pyargs kikuchipy -k "not test_plot_spherical and not test_spherical_pyvista"
+          sudo apt-get update
+          sudo apt-get install xvfb
+          xvfb-run python -m pytest --pyargs kikuchipy
+#          python -m pytest --pyargs kikuchipy -k "not test_plot_spherical and not test_spherical_pyvista"
 
 #      - name: Run LumiSpy Test Suite
 #        if: ${{ always() }}
