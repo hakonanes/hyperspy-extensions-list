@@ -100,7 +100,8 @@ jobs:
             PLATFORM: macos-latest
 
     # Use the "reusable workflow" from the hyperspy organisation
-    uses: hyperspy/.github/.github/workflows/integration_tests.yml@main
+    # uses: hyperspy/.github/.github/workflows/integration_tests.yml@main
+    uses: hakonanes/.github/.github/workflows/integration_tests.yml@test-kp-fix
     with:
       # don't run etspy until test suite is fixed
       # EXTENSIONS: 'hyperspy-gui-ipywidgets hyperspy-gui-traitsui exspy holospy lumispy pyxem atomap etspy'
@@ -115,4 +116,4 @@ jobs:
       ADDITIONAL_PACKAGES: ${{ matrix.ADDITIONAL_PACKAGES }}
       PLATFORM: ${{ matrix.PLATFORM }}
       RSCIIO_CACHE_POOCH_LABEL: ${{ needs.download_rsciio_test_data.outputs.VERSION }}
-      REPORT_FAILURE_AS_ISSUE: true
+      REPORT_FAILURE_AS_ISSUE: false
